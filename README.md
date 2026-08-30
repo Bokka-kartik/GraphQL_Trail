@@ -1,41 +1,66 @@
-# GraphQL Learning Projects 
+# GraphQL Trail
 
-This repository contains my hands-on GraphQL learning journey using Node.js and Apollo Server.
+This repository is my GraphQL learning project, built in a simple and structured way so the backend and frontend are clearly separated.
 
-The goal of this repo is to understand GraphQL from beginner to advanced level by building multiple small projects, each focused on a specific concept.
-
-Instead of keeping everything inside one project, every folder in this repository covers a unique topic, feature, or real-world use case.
+The goal is to learn GraphQL by building small real examples and then eventually add a user interface on top of them.
 
 ---
 
-## Main Stack Used
+## Project Structure
+
+```bash
+GraphQL_Trail/
+├── README.md
+├── backend/
+│   ├── README.md
+│   ├── Schema.js
+│   ├── Resolver.js
+│   ├── server.js
+│   └── package.json
+├── frontend/
+│   ├── README.md
+│   └── ...React app files
+└── .git/
+```
+
+---
+
+## Main Stack
 
 - Node.js
 - JavaScript
 - GraphQL
 - Apollo Server
-- Express concepts (where needed)
+- React (for frontend UI later)
 
 ---
 
-##  Repository Structure
+## What is inside
 
-Each folder represents an independent GraphQL learning module.
+### Backend
+The backend folder contains the GraphQL server, schema, and resolvers. It is responsible for:
 
-GraphQL-Learning-Projects/
-│── 01-Basic-Employee-CRUD/
-│── 02-Queries-and-Arguments/
-│── 03-Mutations-Practice/
-│── 04-Nested-Resolvers/
-│── 05-MongoDB-Integration/
-│── 06-Authentication/
+- defining the GraphQL API
+- handling queries and mutations
+- returning employee data
+- running the Apollo server
 
-# 1. Baisc overview of GraphQL working
+### Frontend
+The frontend folder is meant for the UI layer. It will contain the React app that connects to the backend and lets users:
 
- - here i have just showcase how to make a basic connection via the graphql api just using apollo and graphql modules
- - and used individual  files for schema, resolver,and actual async code that integrates them both
+- view employee data
+- add employees
+- interact with the GraphQL API through a nicer interface
 
+---
 
+## Navigation
 
+- Backend documentation: [backend/README.md](backend/README.md)
+- Frontend documentation: [frontend/README.md](frontend/README.md)
 
-### to Be Continued 
+---
+
+## Notes
+
+This project is still in the learning stage. The backend is already set up, and the frontend will be added as a separate React application for UI testing and user interaction.
