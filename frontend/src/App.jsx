@@ -1,10 +1,12 @@
 import { useState } from 'react'
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client'
+import { ApolloClient, InMemoryCache, HttpLink, gql } from '@apollo/client'
 import { ApolloProvider, useMutation, useQuery } from '@apollo/client/react'
 import './App.css'
 
 const client = new ApolloClient({
-  uri: 'http://localhost:4000/',
+  link: new HttpLink({
+    uri: 'http://localhost:4000/',
+  }),
   cache: new InMemoryCache(),
 })
 
@@ -38,6 +40,8 @@ function EmployeeDashboard() {
     rollno: '',
     student: false,
   })
+  const [formError, setFormError] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
 
   const [addEmployee, { loading: adding }] = useMutation(ADD_EMPLOYEE, {
     refetchQueries: [{ query: GET_EMPLOYEES }],
@@ -50,30 +54,42 @@ function EmployeeDashboard() {
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
     }))
+
+    if (formError) setFormError('')
+    if (successMessage) setSuccessMessage('')
   }
 
   const handleSubmit = async (event) => {
     event.preventDefault()
 
-    if (!formData.id || !formData.name) {
+    if (!formData.id.trim() || !formData.name.trim()) {
+      setFormError('Please fill in both employee ID and name.')
+      setSuccessMessage('')
       return
     }
 
-    await addEmployee({
-      variables: {
-        id: formData.id,
-        name: formData.name,
-        rollno: formData.rollno ? Number(formData.rollno) : null,
-        student: formData.student,
-      },
-    })
+    try {
+      await addEmployee({
+        variables: {
+          id: formData.id.trim(),
+          name: formData.name.trim(),
+          rollno: formData.rollno ? Number(formData.rollno) : null,
+          student: formData.student,
+        },
+      })
 
-    setFormData({
-      id: '',
-      name: '',
-      rollno: '',
-      student: false,
-    })
+      setSuccessMessage('Employee added successfully!')
+      setFormError('')
+      setFormData({
+        id: '',
+        name: '',
+        rollno: '',
+        student: false,
+      })
+    } catch (mutationError) {
+      setFormError(mutationError.message || 'Unable to add employee right now.')
+      setSuccessMessage('')
+    }
   }
 
   const employees = data?.Display ?? []
@@ -90,7 +106,12 @@ function EmployeeDashboard() {
       </section>
 
       <section className="panel form-panel">
-        <h2>Add employee</h2>
+        <div className="panel-heading">
+          <div>
+            <p className="eyebrow light">New entry</p>
+            <h2>Add employee</h2>
+          </div>
+        </div>
 
         <form onSubmit={handleSubmit} className="employee-form">
           <label>
@@ -140,6 +161,9 @@ function EmployeeDashboard() {
             {adding ? 'Adding...' : 'Add employee'}
           </button>
         </form>
+
+        {formError && <p className="form-feedback error">{formError}</p>}
+        {successMessage && <p className="form-feedback success">{successMessage}</p>}
       </section>
 
       <section className="panel list-panel">
